@@ -193,8 +193,9 @@
           </button>
         </div>
         <div class="modal-body">
-          <h2 id="match-name"></h2>
-          <img id="match-img" width="300px" height="300px" src="" alt="">
+          <h2 id="match-name">No match</h2>
+          <img id="match-img" width="300px" height="300px"
+            src="http://asportsplayers.com/wp-content/uploads/2018/04/Dwayne-Johnson-Images.jpg" alt="">
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -213,9 +214,9 @@
       <h2 class="modal-title"><strong>Best Match</strong></h2>
     </div>
     <div class="modal-body">
-      <h2 id="match-name"></h2>
+      <h2 id="match-name">kelly</h2>
       <img id="match-img" width="300px" height="300px"
-        src="" alt="">
+        src="http://asportsplayers.com/wp-content/uploads/2018/04/Dwayne-Johnson-Images.jpg" alt="">
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -235,7 +236,6 @@
 
 
       event.preventDefault();
-      $("#exampleModal").hide()
 
       // Form validation
       function validateForm() {
@@ -285,7 +285,7 @@
 
             if (data) {
               alert("Yay! its posted");
-              $("#exampleModal").show();
+
             }
             else {
               alert("Yay! its not posted");
@@ -295,7 +295,7 @@
       }
       else {
 
-        alert("The fields cannot be empty");
+        alert("the fields cannot be empty");
 
       };
 
