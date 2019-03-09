@@ -161,30 +161,81 @@
     <br>
     <br>
 
-    <!-- Submit Button -->
-    <button type="submit" class="btn btn-primary btn-lg btn-block" id="submit"><i class="fa fa-check-circle"
-        aria-hidden="true"></i>
-      Submit</button>
+    <div class="card-body">
+      <ul id="friendList" class="list-group"></ul>
+    </div>
+  </div>
 
-    <hr>
-    <footer class="footer">
-      <div class="container">
-        <p><a href="/api/friends">API Friends List</a> | <a href="https://github.com/afhaque/friendfinder">GitHub
-            Repo</a></p>
+
+  <!-- Submit Button -->
+  <button type="submit" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#exampleModal"
+    id="submit"><i class="fa fa-check-circle" aria-hidden="true"></i>
+    Submit</button>
+
+  <hr>
+  <footer class="footer">
+    <div class="container">
+      <p><a href="/api/friends">API Friends List</a> | <a href="https://github.com/afhaque/friendfinder">GitHub
+          Repo</a></p>
+    </div>
+  </footer>
+
+  </div>
+
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title" id="exampleModalLabel">BEST MATCH</h2>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <h2 id="match-name"></h2>
+          <img id="match-img" width="300px" height="300px" src="" alt="">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+        </div>
       </div>
-    </footer>
-
+    </div>
   </div>
 
 
 
+  <!-- Modal content
+  <div id="exampleModal" class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal">×</button>
+      <h2 class="modal-title"><strong>Best Match</strong></h2>
+    </div>
+    <div class="modal-body">
+      <h2 id="match-name"></h2>
+      <img id="match-img" width="300px" height="300px"
+        src="" alt="">
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+    </div>
+  </div>
+
+  </div>
+  </div> -->
 
   <script type="text/javascript">
 
 
     // Capture the form inputs
     $("#submit").on("click", function (event) {
+
+
+
+
       event.preventDefault();
+      $("#exampleModal").hide()
 
       // Form validation
       function validateForm() {
@@ -231,9 +282,10 @@
         $.post("/api/friends", userData,
           function (data) {
 
-            // If a table is available... tell user they are booked.
+
             if (data) {
               alert("Yay! its posted");
+              $("#exampleModal").show();
             }
             else {
               alert("Yay! its not posted");
@@ -243,12 +295,90 @@
       }
       else {
 
-        alert("the fields cannot be empty");
+        alert("The fields cannot be empty");
 
       };
 
       console.log(userData);
+      runTableQuery(userData);
+
+      // Clear the form when submitting
+      $("#name").val("");
+      $("#photo").val("");
+      $("#q1").val("");
+      $("#q2").val("");
+      $("#q3").val("");
+      $("#q4").val("");
+      $("#q5").val("");
+      $("#q6").val("");
+      $("#q7").val("");
+      $("#q8").val("");
+      $("#q9").val("");
+      $("#q10").val("");
     });
+
+
+    function runTableQuery(userData) {
+      var diff = 0;
+      var diffArray = [];
+      // The AJAX function uses the URL of our API to GET the data associated with it (initially set to localhost)
+      $.ajax({ url: "/api/friends", method: "GET" })
+        .then(function (friendsData) {
+
+          // Here we then log the tableData to console, where it will show up as an object.
+          console.log(friendsData);
+          console.log("------------------------------------");
+
+          // Loop through and display each of the customers
+          for (var i = 0; i < friendsData.length - 1; i++) {
+            var diff = 0;
+            for (var j = 0; j < 10; j++) {
+              diff += Math.abs(userData.scores[j] - friendsData[i].scores[j]);
+            }
+            diffArray.push(diff)
+            console.log(diffArray);
+
+
+          }
+          console.log(Math.min(...diffArray));
+          var position = diffArray.indexOf(Math.min(...diffArray));
+          console.log(position);
+
+          $("#match-name").text(friendsData[position].name);
+          $("#match-img").attr('src', friendsData[position].photo);
+
+
+
+          // Get a reference to the tableList element and populate it with tables
+          // var friendList = $("#friendList");
+
+          // Then display the fields in the HTML (Section Name, Date, URL)
+          // var listItem = $("<li class='list-group-item mt-4'>");
+
+          // listItem.append(
+          //   $("<h2>").text("Table #" + (i + 1)),
+          //   $("<hr>"),
+          //   $("<h2>").text("name: " + friendsData[i].name),
+          //   $("<h2>").text("photo: " + friendsData[i].photo),
+          //   $("<h2>").text("scores: " + friendsData[i].scores[0]),
+          //   $("<h2>").text("scores: " + friendsData[i].scores[1]),
+          //   $("<h2>").text("scores: " + friendsData[i].scores[2]),
+          //   $("<h2>").text("scores: " + friendsData[i].scores[3]),
+          //   $("<h2>").text("scores: " + friendsData[i].scores[4]),
+          //   $("<h2>").text("scores: " + friendsData[i].scores[5]),
+          //   $("<h2>").text("scores: " + friendsData[i].scores[6]),
+          //   $("<h2>").text("scores: " + friendsData[i].scores[7]),
+          //   $("<h2>").text("scores: " + friendsData[i].scores[8]),
+          //   $("<h2>").text("scores: " + friendsData[i].scores[9])
+
+          // );
+
+          // friendList.append(listItem);
+
+        });
+    }
+
+
 
   </script>
 
